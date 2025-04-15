@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>UTM 链接生成器</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2em;
+      background-color: #f6f6f6;
+    }
+    label, input {
+      display: block;
+      margin: 0.5em 0;
+    }
+    input {
+      padding: 0.5em;
+      width: 300px;
+    }
+    #result {
+      margin-top: 1em;
+      font-weight: bold;
+      color: #1a73e8;
+    }
+  </style>
+</head>
+<body>
+  <h2>UTM 链接生成器</h2>
+  <label for="name">姓名（name 参数）:</label>
+  <input type="text" id="name" placeholder="请输入姓名，如张三">
+
+  <label for="date">日期（date 参数）:</label>
+  <input type="text" id="date" placeholder="如0415">
+
+  <button onclick="generateLink()">生成链接</button>
+
+  <div id="result"></div>
+
+  <script>
+    function generateLink() {
+      const name = encodeURIComponent(document.getElementById("name").value.trim());
+      const date = encodeURIComponent(document.getElementById("date").value.trim());
+      if (!name || !date) {
+        alert("请填写姓名和日期！");
+        return;
+      }
+      const baseURL = "https://kusa.pics/";
+      const fullLink = `${baseURL}?name=${name}&date=${date}`;
+      document.getElementById("result").innerHTML = `<p>生成链接：</p><a href="${fullLink}" target="_blank">${fullLink}</a>`;
+    }
+  </script>
+</body>
+</html>
