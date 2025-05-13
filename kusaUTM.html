@@ -22,31 +22,43 @@
       font-weight: bold;
       color: #1a73e8;
     }
+    #copyMsg {
+      color: green;
+      margin-top: 0.5em;
+      font-weight: normal;
+    }
   </style>
 </head>
 <body>
   <h2>UTM 链接生成器</h2>
-  <label for="name">姓名（name 参数）:</label>
-  <input type="text" id="name" placeholder="请输入姓名，如张三">
+  <label for="name">姓名（5位以内字母，如aa）:</label>
+  <input type="text" id="name" maxlength="5" placeholder="请输入5位以内字母，如aa">
 
-  <label for="date">日期（date 参数）:</label>
-  <input type="text" id="date" placeholder="如0415">
+  <label for="date">日期（6位以内数字，如0416）:</label>
+  <input type="text" id="date" maxlength="6" placeholder="如0416">
 
-  <button onclick="generateLink()">生成链接</button>
-
+  <button onclick="generateAndCopyLink()">生成并复制 UTM 链接</button>
   <div id="result"></div>
-
+  <div id="copyMsg"></div>
   <script>
-    function generateLink() {
-      const name = encodeURIComponent(document.getElementById("name").value.trim());
-      const date = encodeURIComponent(document.getElementById("date").value.trim());
-      if (!name || !date) {
-        alert("请填写姓名和日期！");
+    function generateAndCopyLink() {
+      const name = document.getElementById("name").value.trim();
+      const date = document.getElementById("date").value.trim();
+      if (!/^[a-zA-Z]{1,5}$/.test(name)) {
+        alert("姓名请填写1-5位字母！");
         return;
       }
-      const baseURL = "https://kusa.pics/";
-      const fullLink = `${baseURL}?name=${name}&date=${date}`;
+      if (!/^\d{1,6}$/.test(date)) {
+        alert("日期请填写1-6位数字！");
+        return;
+      }
+      const fullLink = `https://kusa.pics/?${name}${date}`;
       document.getElementById("result").innerHTML = `<p>生成链接：</p><a href="${fullLink}" target="_blank">${fullLink}</a>`;
+      navigator.clipboard.writeText(fullLink).then(() => {
+        document.getElementById("copyMsg").textContent = "链接已复制到剪切板！";
+      }, () => {
+        document.getElementById("copyMsg").textContent = "复制失败，请手动复制。";
+      });
     }
   </script>
 </body>
